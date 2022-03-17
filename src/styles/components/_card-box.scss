@@ -1,0 +1,21 @@
+@import "./variables";
+
+.title-card {
+  font-family: $font-family;
+  font-weight: 700;
+  font-size: 65px;
+  margin: 0 auto;
+}
+
+.form-input {
+  margin: 0 auto;
+}
+
+.facebook-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.text-icon {
+  font-weight: 700;
+}
