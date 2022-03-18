@@ -1,47 +1,48 @@
-import React, { useState } from "react";
-import { auth } from "../Firebase";
+import React, { useContext, useState } from "react";
+import { auth, db } from "../Firebase";
+import { useForm } from "react-hook-form";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../styles/_main.scss";
-
-import { Card, Form, FormGroup, Input, Button, Label } from "reactstrap";
+import { collection, addDoc, getDocs } from "firebase/firestore";
+import { Card, Form, FormGroup, Input, Button } from "reactstrap";
+import AuthContext from "../contexts/AuthContext";
+import { getApp } from "firebase/app";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
-
+  const [userName, setUserName] = useState("");
   const [error, setError] = useState("");
+  const { currentUser } = useContext(AuthContext);
+  const {
+    register,
+    handleSubmit,
+
+    formState: { errors },
+  } = useForm();
 
   const navigate = useNavigate();
 
-  const validatePassword = () => {
-    let isValidPassword = true;
-    if (password !== "" && confirmPassword !== "") {
-      if (password != confirmPassword) {
-        isValidPassword = false;
-        setError("Password invalid");
-      }
+  const onSubmit = async (email, password, FullName, UserName) => {
+    console.log("hola", email, password, fullName, userName);
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      const user = res.user;
+      console.log(user, "hola user");
+      /*await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        fullName,
+        userName,
+        email,
+      });*/
+    } catch (err) {
+      console.log(err.message);
     }
-    return isValidPassword;
-  };
-
-  const authRegister = (e) => {
-    e.preventDefault();
-    setError("");
-    if (validatePassword()) {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((res) => {
-          console.log(res.user);
-        })
-        .catch((err) => setError(err.message));
-    }
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
   };
 
   return (
@@ -52,29 +53,32 @@ const Register = () => {
           <p>Sign up to see photos and videos from your friends.</p>
         </section>
 
-        <Form className="h-50">
+        <Form className="h-50" onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
             <Input
               id="exampleEmail"
               name="email"
               placeholder="Email"
               type="email"
+              onChange={(ev) => setEmail(ev.target.value)}
             />
           </FormGroup>
           <FormGroup>
             <Input
               id="fullName"
-              name="full-name"
+              name="fullName"
               placeholder="Full Name"
               type="text"
+              onChange={(ev) => setFullName(ev.target.value)}
             />
           </FormGroup>
           <FormGroup>
             <Input
               id="userName"
-              name="user-name"
+              name="userName"
               placeholder="Username"
               type="text"
+              onChange={(ev) => setUserName(ev.target.value)}
             />
           </FormGroup>
           <FormGroup>
@@ -83,6 +87,7 @@ const Register = () => {
               name="password"
               placeholder="Password "
               type="password"
+              onChange={(ev) => setPassword(ev.target.value)}
             />
           </FormGroup>
 

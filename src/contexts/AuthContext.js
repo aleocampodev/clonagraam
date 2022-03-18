@@ -1,12 +1,23 @@
 import React, { createContext, useState, useEffect } from "react";
-import app from "../Firebase.js";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../Firebase.js";
+
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+    });
+    console.log(currentUser, "hola user");
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ currentUser }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
