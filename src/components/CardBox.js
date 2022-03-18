@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import googlePlay from "../assets/googlePlay.png";
 import appStore from "../assets/appStore.png";
-import { Card, Form, FormGroup, Button, Label, Input } from "reactstrap";
+import { Card, Form, FormGroup, Button, Input } from "reactstrap";
+import { Link } from "react-router-dom";
 import facebook from "../assets/facebook.png";
 import "../styles/_main.scss";
 
 const CardBox = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   return (
     <>
       <Card className="margin-right">
@@ -55,9 +59,9 @@ const CardBox = () => {
 
       <Card className="margin-right mt-3 d-flex flex-row justify-content-center p-3">
         <p className="pr-3">Don't have an account? </p>
-        <a href="#" className="style-link">
+        <Link to="/register" href="#" className="style-link">
           <p> Sign up</p>
-        </a>
+        </Link>
       </Card>
 
       <section className="margin-right mt-3">

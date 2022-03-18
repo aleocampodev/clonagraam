@@ -1,3 +1,4 @@
+@import "./_variables";
 .margin-right {
   margin-right: 195px;
 }
@@ -13,4 +14,8 @@
 
 .style-link {
   text-decoration: none;
+}
+
+.bg-first {
+  background-color: $background-primary;
 }
