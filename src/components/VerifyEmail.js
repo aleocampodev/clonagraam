@@ -1,4 +1,4 @@
-/*mport React, { useContext, useEffect, useState } from "react";
+import React, { useEffect} from "react";
 import { useAuth } from "../hooks/UseAuth";
 
 import { auth } from "../Firebase";
@@ -6,25 +6,10 @@ import { sendEmailVerification } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 const VerifyEmail = () => {
-  const { currentUser } = useContext(AuthContext);
+  const { } = useContext(AuthContext);
   const navigate = useNavigate;
-  const [time, setTime] = useState(60);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      currentUser
-        ?.reload()
-        .then(() => {
-          if (currentUser?.emailVerified) {
-            clearInterval(interval);
-            navigate("/");
-          }
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-    }, 1000);
-  }, [navigate, currentUser]);
+ 
+  
 
   useEffect(() => {
     let interval = null;
