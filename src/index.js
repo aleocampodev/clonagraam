@@ -6,7 +6,8 @@ import Register from "./components/Register";
 import "bootstrap/dist/css/bootstrap.min.css";
 import PrivateRoute from "./components/PrivateRoute";
 import Post from "./components/Post";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
+import VerifyEmail from "./components/VerifyEmail";
 
 ReactDOM.render(
   <AuthProvider>
