@@ -1,17 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { Form, FormGroup, Input, Button } from "reactstrap";
+import { useAuth } from "../hooks/UseAuth";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [userLogin, setUserLogin] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  const login = (e) => {
+  const handleChange = ({ target: { name, value } }) => {
+    setUserLogin({ ...userLogin, [name]: value });
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("hola data");
+    setError("");
+    try {
+      await login(userLogin.email, userLogin.password);
+      navigate("/feed");
+    } catch (err) {
+      setError(err.message);
+    }
+    e.target.reset();
   };
   return (
     <>
-      <Form className="mt-3 " onSubmit={login}>
+      <Form className="mt-3 " onSubmit={handleLogin}>
         <FormGroup>
           <Input
             id="exampleEmail"
@@ -19,7 +37,7 @@ const Login = () => {
             placeholder="Email"
             type="email"
             className="w-50 form-input"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleChange}
           />
         </FormGroup>
         <FormGroup className="w-80">
@@ -29,7 +47,7 @@ const Login = () => {
             placeholder="password"
             type="password"
             className="w-50 form-input"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleChange}
           />
         </FormGroup>
 
