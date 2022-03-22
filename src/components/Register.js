@@ -1,14 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/_main.scss";
 import { Card, Form, FormGroup, Input, Button } from "reactstrap";
 import { useAuth } from "../hooks/UseAuth";
-import { getApp } from "firebase/app";
+
+import { db } from "../Firebase";
 
 const Register = () => {
   const [user, setUser] = useState({
     email: "",
     password: "",
+    fullName: "",
+    userName: "",
   });
 
   const [error, setError] = useState("");
@@ -23,9 +26,8 @@ const Register = () => {
     e.preventDefault();
     setError("");
     try {
-      await signUp(user.email, user.password);
-
-      navigate("/verify-email");
+      await signUp(user.email, user.password, user.fullName, user.userName);
+      navigate("/feed");
     } catch (error) {
       setError(error.message);
       if (error.code === "auth/internal-error") {
@@ -54,6 +56,24 @@ const Register = () => {
               name="email"
               placeholder="Email"
               type="email"
+              onChange={handleChange}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Input
+              id="fullName"
+              name="fullName"
+              placeholder="Full Name"
+              type="text"
+              onChange={handleChange}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Input
+              id="userName"
+              name="userName"
+              placeholder="User name"
+              type="text"
               onChange={handleChange}
             />
           </FormGroup>

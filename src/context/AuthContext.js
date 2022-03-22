@@ -21,13 +21,16 @@ export const AuthProvider = ({ children }) => {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
 
-    const docuRef = await addDoc(collection(db, `users`), {
+    console.log(user, "hola userop");
+
+    await setDoc(doc(db, `users/${user.uid}`), {
       email,
       fullName,
       userName,
     });
   };
 
+  console.log(userAuth, "hola usuarioeu");
   const verifyEmail = () => {
     sendEmailVerification(auth.currentUser);
   };
@@ -44,37 +47,34 @@ export const AuthProvider = ({ children }) => {
   const logOut = () => signOut(auth);
 
   const getInfoUser = async (uid) => {
-    const docuRef = doc(db, `users`, uid);
+    const docuRef = doc(db, `users/${uid}`);
     const docSnap = await getDoc(docuRef);
-    if (docSnap.exists()) {
-      return docSnap.data();
-    } else {
-      console.log("note doesnit exits");
-    }
+    const infoFinal = docSnap.data();
+    return infoFinal;
   };
 
   useEffect(() => {
     const onSubscribe = onAuthStateChanged(auth, (currentUser) => {
+      //setUserAuth(currentUser);
+      //setLoading(false);
       if (currentUser) {
-        console.log(currentUser.uid, "hola uid");
-        /*const userData = {
+        getInfoUser(auth.currentUser.uid).then((addInfo) => {
+          const userData = {
             uid: currentUser.uid,
             email: currentUser.email,
-            fullName: fullName,
-            userName: userName,
-          };*/
-        console.log;
-        setUserAuth(userData);
-        setLoading(false);
-        console.log("usedagt", userData);
+            fullName: addInfo.fullName,
+            userName: addInfo.userName,
+          };
 
-        setLoading(true);
+          setUserAuth(userData);
+          setLoading(false);
+        });
       } else {
         setUserAuth(null);
       }
-
-      console.log(currentUser);
     });
+
+    console.log(userAuth, "hola userioe");
     return () => onSubscribe;
   }, []);
   return (
@@ -89,6 +89,7 @@ export const AuthProvider = ({ children }) => {
         setTimeActive,
         timeActive,
         loginWithFacebook,
+        setUserAuth,
       }}
     >
       {children}
