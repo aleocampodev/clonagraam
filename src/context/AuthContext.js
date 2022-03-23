@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { AuthContext } from "../hooks/UseAuth";
-import { auth, db } from "../Firebase";
+import firebase from "firebase";
+import { auth, db, storage } from "../Firebase";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -10,6 +11,7 @@ import {
   FacebookAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
+
 import { setDoc, addDoc, collection, getDoc, doc } from "firebase/firestore";
 
 export const AuthProvider = ({ children }) => {
@@ -17,7 +19,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [timeActive, setTimeActive] = useState(false);
 
-  const signUp = async (email, password, fullName, userName) => {
+  const signUp = async (email, password, fullName, userName, photoUrl) => {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
 
@@ -27,10 +29,11 @@ export const AuthProvider = ({ children }) => {
       email,
       fullName,
       userName,
+      photoUrl,
     });
   };
 
-  console.log(userAuth, "hola usuarioeu");
+  console.log(userAuth.id, "hola usuarioeu");
   const verifyEmail = () => {
     sendEmailVerification(auth.currentUser);
   };
@@ -53,6 +56,28 @@ export const AuthProvider = ({ children }) => {
     return infoFinal;
   };
 
+  /*const create = (data, uid) => {
+    const { description, image } = data;
+    const upload = storage.ref(`images/${image.name}`).put(image);
+    upload.on(
+      "state_changed",
+      (snp) => {
+        let progress = (snp.bytesTransferred / snp.totalBytes) * 100;
+        console.log(progress, "hola progreso");
+      },
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        storage.ref("images").child(image.name).getDownloadURL().then(url => {
+          db.collection("users").doc(`${userAuth.uid}`).update({
+            description: description,
+            image: url,
+            currentTime: firebase.firestore.FieldValue.serverTimestamp()
+        })
+      })
+  };*/
+
   useEffect(() => {
     const onSubscribe = onAuthStateChanged(auth, (currentUser) => {
       //setUserAuth(currentUser);
@@ -64,6 +89,7 @@ export const AuthProvider = ({ children }) => {
             email: currentUser.email,
             fullName: addInfo.fullName,
             userName: addInfo.userName,
+            photoUrl: addInfo.photoUrl,
           };
 
           setUserAuth(userData);
@@ -90,6 +116,7 @@ export const AuthProvider = ({ children }) => {
         timeActive,
         loginWithFacebook,
         setUserAuth,
+        create,
       }}
     >
       {children}

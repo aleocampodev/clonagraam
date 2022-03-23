@@ -6,6 +6,7 @@ import { useAuth } from "../hooks/UseAuth";
 import Facebook from "../assets/icon-facebook.jpeg";
 import googlePlay from "../assets/googlePlay.png";
 import appStore from "../assets/appStore.png";
+import imageDefault from "../assets/imageDefault.jpeg";
 
 const Register = () => {
   const [user, setUser] = useState({
@@ -13,7 +14,10 @@ const Register = () => {
     password: "",
     fullName: "",
     userName: "",
+    photoUrl: imageDefault,
   });
+
+  console.log(imageDefault, "Hola osa");
 
   const [error, setError] = useState("");
   const { signUp } = useAuth();
@@ -27,7 +31,13 @@ const Register = () => {
     e.preventDefault();
     setError("");
     try {
-      await signUp(user.email, user.password, user.fullName, user.userName);
+      await signUp(
+        user.email,
+        user.password,
+        user.fullName,
+        user.userName,
+        user.photoUrl
+      );
       navigate("/feed");
     } catch (error) {
       setError(error.message);

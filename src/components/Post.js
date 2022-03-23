@@ -1,9 +1,12 @@
 import React from "react";
+import { Card } from "reactstrap";
 
 function Post() {
   return (
-    <div>
-      <h3>Username</h3>
+    <div className="flex-grow-1">
+      <Card color="white" className="w-100">
+        <p>Hola</p>
+      </Card>
     </div>
   );
 }
