@@ -3,23 +3,42 @@ import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 import iconPlus from "../assets/plus.png";
 import cameraIcon from "../assets/camera.png";
 import { useAuth } from "../hooks/UseAuth";
+import { app, storage, db } from "../Firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { async } from "@firebase/util";
+import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 
 const CreatePost = () => {
   const [modal, setModal] = useState(false);
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
-  const { create } = useAuth();
+  const { userAuth } = useAuth();
 
   const toggle = () => setModal(!modal);
 
-  const onFileChange = (e) => {
-    setImage(e.target.files[0]);
+  const onFileChange = async (e) => {
+    if (e.target.files[0]) {
+      setImage(e.target.files[0]);
+    }
   };
 
-  const createPost = (e) => {
+  const createPost = async (e) => {
     e.preventDefault();
-    create({ description, image });
-    e.target.reset();
+    const upload = ref(storage, `images/${image.name}`);
+    const uploadPost = await uploadBytes(upload, image);
+
+    const url = await getDownloadURL(uploadPost.ref);
+
+    await setDoc(doc(db, "users", userAuth.uid), {
+      image: url,
+      description: description,
+      userName: userAuth.userName,
+      fullName: userAuth.fullName,
+      photoUrl: userAuth.photoUrl,
+      timestamp: serverTimestamp(),
+    });
+    setDescription("");
+    setImage("");
   };
   return (
     <div style={{ display: "block" }}>
@@ -28,7 +47,11 @@ const CreatePost = () => {
         className="border-0 rounded-circle size-image ms-5"
         color="none"
       >
-        <img src={iconPlus} alt="plus icon" className="iconPlus size-image" />
+        <img
+          src={iconPlus}
+          alt="plus icon"
+          className="iconPlus size-image iconPosition"
+        />
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
         <form onSubmit={createPost}>
@@ -37,11 +60,12 @@ const CreatePost = () => {
               <img
                 src={cameraIcon}
                 alt="camera icon"
-                className="w-25 cursor-pointer"
+                className="w-25 pointer"
               />
             </label>
             <input
               type="file"
+              multiple
               onChange={onFileChange}
               id="file"
               className="d-none "

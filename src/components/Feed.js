@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { CardHeader } from "reactstrap";
 import imageDefault from "../assets/imageDefault.jpeg";
 import "../styles/_main.scss";
-import Post from "./Post";
+import Posts from "./Posts";
 import Lens from "../assets/lens.png";
 import CreatePost from "./CreatePost";
 
@@ -55,7 +55,7 @@ const Feed = () => {
         </div>
       </CardHeader>
       <div className="mh-100 bg-first w-50 margin-left position: relative  overflow-y: scroll mt-3 d-flex">
-        <Post />
+        <Posts />
         <div className="d-flex">
           <img
             src={userAuth.photoUrl}
