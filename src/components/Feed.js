@@ -3,7 +3,6 @@ import React from "react";
 import { useAuth } from "../hooks/UseAuth";
 import { useNavigate, Link } from "react-router-dom";
 import { CardHeader } from "reactstrap";
-import imageDefault from "../assets/imageDefault.jpeg";
 import "../styles/_main.scss";
 import Posts from "./Posts";
 import Lens from "../assets/lens.png";

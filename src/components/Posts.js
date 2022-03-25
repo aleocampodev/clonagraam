@@ -1,14 +1,64 @@
-import React from "react";
-import { Card } from "reactstrap";
+import React, { useEffect, useState } from "react";
+import { Card, Button, CardHeader } from "reactstrap";
+import {
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import { db, auth } from "../Firebase";
+import { useAuth } from "../hooks/UseAuth";
 
-function Post() {
+function Posts() {
+  const [posts, setPosts] = useState([]);
+
+  const { userAuth } = useAuth();
+
+  useEffect(() => {
+    const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
+    onSnapshot(q, (querySnapshot) => {
+      console.log(querySnapshot, "holah");
+      setPosts(
+        querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      );
+    });
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, "posts", id));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  console.log(posts, "holihkask");
+
   return (
     <div className="flex-grow-1">
-      <Card color="white" className="w-100">
-        <p>Hola</p>
-      </Card>
+      {posts &&
+        posts.map((post) => {
+          console.log(post.data.image, "hola");
+          return (
+            <Card color="white" className="w-100 m-3" key={post.id}>
+              <CardHeader>
+                <p>{post.data.userName}</p>
+              </CardHeader>
+              <img src={post.data.image} className="w-100" />
+              <p>{post.data.description}</p>
+              {post.data.userId === userAuth.uid ? (
+                <Button onClick={() => handleDelete(post.id)}>Delete</Button>
+              ) : null}
+            </Card>
+          );
+        })}
     </div>
   );
 }
 
-export default Post;
+export default Posts;

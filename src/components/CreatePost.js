@@ -6,12 +6,20 @@ import { useAuth } from "../hooks/UseAuth";
 import { app, storage, db } from "../Firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { async } from "@firebase/util";
-import { setDoc, doc, serverTimestamp } from "firebase/firestore";
+import {
+  setDoc,
+  doc,
+  serverTimestamp,
+  updateDoc,
+  collection,
+  addDoc,
+} from "firebase/firestore";
 
 const CreatePost = () => {
   const [modal, setModal] = useState(false);
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
+  const [url, setUrl] = useState("");
   const { userAuth } = useAuth();
 
   const toggle = () => setModal(!modal);
@@ -20,6 +28,8 @@ const CreatePost = () => {
     if (e.target.files[0]) {
       setImage(e.target.files[0]);
     }
+    /*const file = e.target.files;
+    console.log(file, "hello");*/
   };
 
   const createPost = async (e) => {
@@ -29,17 +39,17 @@ const CreatePost = () => {
 
     const url = await getDownloadURL(uploadPost.ref);
 
-    await setDoc(doc(db, "users", userAuth.uid), {
+    await addDoc(collection(db, `posts`), {
+      userId: userAuth.uid,
+      userName: userAuth.userName,
       image: url,
       description: description,
-      userName: userAuth.userName,
-      fullName: userAuth.fullName,
-      photoUrl: userAuth.photoUrl,
       timestamp: serverTimestamp(),
     });
     setDescription("");
     setImage("");
   };
+
   return (
     <div style={{ display: "block" }}>
       <Button
@@ -56,7 +66,7 @@ const CreatePost = () => {
       <Modal isOpen={modal} toggle={toggle}>
         <form onSubmit={createPost}>
           <div>
-            <label htmlFor="file">
+            <label htmlFor="file" multiple>
               <img
                 src={cameraIcon}
                 alt="camera icon"
@@ -65,11 +75,13 @@ const CreatePost = () => {
             </label>
             <input
               type="file"
-              multiple
               onChange={onFileChange}
               id="file"
               className="d-none "
             />
+          </div>
+          <div>
+            <img src={url} alt={userAuth.description} />
           </div>
           <div>
             <input
@@ -83,6 +95,7 @@ const CreatePost = () => {
             <input type="submit" value="Create" className="bg-primary" />
           </div>
         </form>
+
         <ModalFooter>
           <Button color="primary" onClick={toggle}>
             Okay

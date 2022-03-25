@@ -17,12 +17,21 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 
-import { setDoc, addDoc, collection, getDoc, doc } from "firebase/firestore";
+import {
+  setDoc,
+  addDoc,
+  collection,
+  getDoc,
+  doc,
+  query,
+  where,
+} from "firebase/firestore";
 
 export const AuthProvider = ({ children }) => {
   const [userAuth, setUserAuth] = useState(null);
   const [loading, setLoading] = useState(true);
   const [timeActive, setTimeActive] = useState(false);
+  const [loader, setLoader] = useState(true);
 
   const signUp = async (email, password, fullName, userName, photoUrl) => {
     const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -106,6 +115,8 @@ export const AuthProvider = ({ children }) => {
           };
 
           setUserAuth(userData);
+          setLoader(false);
+          console.log(userData, "hola data");
           setLoading(false);
         });
       } else {
@@ -114,6 +125,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     console.log(userAuth, "hola userioe");
+
     return () => onSubscribe;
   }, []);
   return (
@@ -129,6 +141,7 @@ export const AuthProvider = ({ children }) => {
         timeActive,
         loginWithFacebook,
         setUserAuth,
+        loader,
       }}
     >
       {children}
