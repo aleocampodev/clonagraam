@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 import iconPlus from "../assets/plus.png";
 import cameraIcon from "../assets/camera.png";
 import { useAuth } from "../hooks/UseAuth";
+import { render } from "react-dom";
 import { app, storage, db } from "../Firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { async } from "@firebase/util";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadBytesResumable,
+} from "firebase/storage";
 import {
   setDoc,
   doc,
@@ -20,14 +25,45 @@ const CreatePost = () => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
   const [url, setUrl] = useState("");
+  const [progress, setProgress] = useState(0);
   const { userAuth } = useAuth();
 
-  const toggle = () => setModal(!modal);
+  const toggle = () => {
+    setModal(!modal);
+    setImage("");
+    setDescription("");
+  };
 
   const onFileChange = async (e) => {
     if (e.target.files[0]) {
       setImage(e.target.files[0]);
     }
+
+    /*const upload = ref(storage, `images/${image.name}`);
+      getDownloadURL(upload).then((url) => setUrl(url));
+      console.log(image, "holi");*/
+
+    /* uploadPost.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+       
+        console.log("upload is" + progress + "% done", snapshot);
+      },
+      (error) => {
+        
+        console.log(error);
+      },
+      () => {
+        
+        getDownloadURL(uploadPost.snapshot).then((snapshot) =>
+          console.log(snapshot)
+        );
+      }
+    );*/
+
     /*const file = e.target.files;
     console.log(file, "hello");*/
   };
@@ -49,6 +85,12 @@ const CreatePost = () => {
     setDescription("");
     setImage("");
   };
+
+  useEffect(() => {
+    const upload = ref(storage, `images/${image.name}`);
+    getDownloadURL(upload).then((url) => setUrl(url));
+    console.log(image, "holi");
+  }, [image]);
 
   return (
     <div style={{ display: "block" }}>
@@ -80,9 +122,9 @@ const CreatePost = () => {
               className="d-none "
             />
           </div>
-          <div>
-            <img src={url} alt={userAuth.description} />
-          </div>
+          <progress value={progress} max="100" />
+          <img src={url} />
+
           <div>
             <input
               type="text"

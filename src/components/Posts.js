@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "../Firebase";
 import { useAuth } from "../hooks/UseAuth";
+import EditPost from "./EditPost";
 
 function Posts() {
   const [posts, setPosts] = useState([]);
@@ -53,6 +54,13 @@ function Posts() {
               <p>{post.data.description}</p>
               {post.data.userId === userAuth.uid ? (
                 <Button onClick={() => handleDelete(post.id)}>Delete</Button>
+              ) : null}
+              {post.data.userId === userAuth.uid ? (
+                <EditPost
+                  toEditImage={post.data.image}
+                  toEditDescription={post.data.description}
+                  id={post.id}
+                />
               ) : null}
             </Card>
           );
