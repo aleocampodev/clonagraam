@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/_main.scss";
 import { Card, Form, FormGroup, Input, Button } from "reactstrap";
 import { useAuth } from "../hooks/UseAuth";
@@ -24,14 +24,18 @@ const Register = () => {
     setError("");
     try {
       await signUp(user.email, user.password);
-      navigate("/feed");
-    } catch (err) {
-      setError(err.message);
-      if (error.code === "auth/internal-error") {
-        setError("correo invalido");
-      }
+
+      navigate("/verify-email");
+    } catch (error) {
       setError(error.message);
+      if (error.code === "auth/internal-error") {
+        setError("invalid email");
+      }
+      if (error.code === "auth/email-already-in-use") {
+        setError("email exist");
+      }
     }
+    e.target.reset();
   };
 
   return (

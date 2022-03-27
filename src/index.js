@@ -4,8 +4,8 @@ import App from "./App";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Register from "./components/Register";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Feed from "./components/Feed";
 import PrivateRoute from "./components/PrivateRoute";
-import Post from "./components/Post";
 import { AuthProvider } from "./context/AuthContext";
 import VerifyEmail from "./components/VerifyEmail";
 
@@ -17,12 +17,13 @@ ReactDOM.render(
           path="/feed"
           element={
             <PrivateRoute>
-              <Post />
+              <Feed />
             </PrivateRoute>
           }
         />
         <Route path="/" element={<App />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
       </Routes>
     </BrowserRouter>
   </AuthProvider>,
