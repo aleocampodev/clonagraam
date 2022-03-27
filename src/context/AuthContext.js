@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { AuthContext } from "../hooks/UseAuth";
-import firebase from "firebase";
-import { auth, db, storage } from "../Firebase";
+import {
+  ref,
+  getDownloadURL,
+  uploadBytesResumable,
+  uploadBytes,
+} from "firebase/storage";
+import { auth, db, storage, firebase, app } from "../Firebase";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -33,7 +38,6 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  console.log(userAuth.id, "hola usuarioeu");
   const verifyEmail = () => {
     sendEmailVerification(auth.currentUser);
   };
@@ -56,26 +60,35 @@ export const AuthProvider = ({ children }) => {
     return infoFinal;
   };
 
-  /*const create = (data, uid) => {
+  /*const create = (data) => {
     const { description, image } = data;
-    const upload = storage.ref(`images/${image.name}`).put(image);
-    upload.on(
+    const upload = ref(storage, `images/${image.name}`);
+    const uploadPost = uploadBytes(upload, image);
+
+    uploadPost.on(
       "state_changed",
-      (snp) => {
-        let progress = (snp.bytesTransferred / snp.totalBytes) * 100;
+      (snapshot) => {
+        let progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
         console.log(progress, "hola progreso");
       },
-      (error) => {
-        console.log(error);
+      (err) => {
+        console.log(err);
       },
       () => {
-        storage.ref("images").child(image.name).getDownloadURL().then(url => {
-          db.collection("users").doc(`${userAuth.uid}`).update({
-            description: description,
-            image: url,
-            currentTime: firebase.firestore.FieldValue.serverTimestamp()
-        })
-      })
+        storage
+          .ref("images")
+          .child(image.name)
+          .getDownloadURL()
+          .then((url) => {
+            db.collection("posts").set(`${userAuth.uid}`, {
+              description: description,
+              image: url,
+            });
+          });
+      }
+    );
   };*/
 
   useEffect(() => {
@@ -116,7 +129,6 @@ export const AuthProvider = ({ children }) => {
         timeActive,
         loginWithFacebook,
         setUserAuth,
-        create,
       }}
     >
       {children}
