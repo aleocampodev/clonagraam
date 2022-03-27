@@ -1,23 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
+import Footer from "./components/Footer";
+import Home from "./components/Home";
+import { Container, Col, Row } from "reactstrap";
+import "./styles/_main.scss";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App vh-100 bg-fluid d-flex flex-column justify-content-center">
+      <Home />
+      <Footer />
     </div>
   );
 }
