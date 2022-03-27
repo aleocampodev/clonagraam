@@ -1,8 +1,23 @@
-//import { useAuth } from "../context/authContext";
-import CreatePost from "../components/CreatePost";
+import { CardHeader } from "reactstrap";
+import { useAuth } from "../hooks/UseAuth";
 
 const Profile = () => {
-  return <CreatePost />;
+  const { userAuth } = useAuth();
+  return (
+    <CardHeader className="w-100 d-flex">
+      <div>
+        <label htmlFor="file">
+          <img
+            src={userAuth.photoUrl}
+            alt="profile image"
+            className="rounded-circle size-image-lg ms-5"
+          />
+        </label>
+        <input type="file" />
+      </div>
+      <h4>{userAuth.userName}</h4>
+    </CardHeader>
+  );
 };
 
 export default Profile;
