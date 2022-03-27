@@ -3,8 +3,7 @@ import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 import iconPlus from "../assets/plus.png";
 import cameraIcon from "../assets/camera.png";
 import { useAuth } from "../hooks/UseAuth";
-import { render } from "react-dom";
-import { app, storage, db } from "../Firebase";
+import { storage, db } from "../Firebase";
 import {
   ref,
   uploadBytes,
@@ -25,7 +24,6 @@ const CreatePost = () => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
   const [url, setUrl] = useState("");
-  const [progress, setProgress] = useState(0);
   const { userAuth } = useAuth();
 
   const toggle = () => {
@@ -70,25 +68,32 @@ const CreatePost = () => {
 
   const createPost = async (e) => {
     e.preventDefault();
-    const upload = ref(storage, `images/${image.name}`);
-    const uploadPost = await uploadBytes(upload, image);
+    try {
+      const upload = ref(storage, `images/${image.name}`);
+      const uploadPost = await uploadBytes(upload, image);
 
-    const url = await getDownloadURL(uploadPost.ref);
+      const url = await getDownloadURL(uploadPost.ref);
 
-    await addDoc(collection(db, `posts`), {
-      userId: userAuth.uid,
-      userName: userAuth.userName,
-      image: url,
-      description: description,
-      timestamp: serverTimestamp(),
-    });
+      await addDoc(collection(db, `posts`), {
+        userId: userAuth.uid,
+        userName: userAuth.userName,
+        image: url,
+        description: description,
+        timestamp: serverTimestamp(),
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
     setDescription("");
     setImage("");
   };
 
-  useEffect(() => {
-    const upload = ref(storage, `images/${image.name}`);
-    getDownloadURL(upload).then((url) => setUrl(url));
+  useEffect(async () => {
+    const upload = await ref(storage, `images/${image.name}`);
+    const uploadImage = uploadBytesResumable(upload, image).then(() => {
+      getDownloadURL(upload).then((url) => setUrl(url));
+    });
     console.log(image, "holi");
   }, [image]);
 
@@ -108,7 +113,7 @@ const CreatePost = () => {
       <Modal isOpen={modal} toggle={toggle}>
         <form onSubmit={createPost}>
           <div>
-            <label htmlFor="file" multiple>
+            <label htmlFor="file" multiple className="width-small">
               <img
                 src={cameraIcon}
                 alt="camera icon"
@@ -122,8 +127,10 @@ const CreatePost = () => {
               className="d-none "
             />
           </div>
-          <progress value={progress} max="100" />
-          <img src={url} />
+
+          {image.name === undefined ? null : (
+            <img src={url} className="w-100" />
+          )}
 
           <div>
             <input

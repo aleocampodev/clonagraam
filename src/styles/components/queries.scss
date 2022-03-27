@@ -1,0 +1,51 @@
+@media (min-width: 576px) {
+  div.box-right {
+    display: none;
+  }
+  div.margin-right {
+    margin: 0;
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+  div.margin-right {
+    margin-right: 0;
+  }
+
+  div.box-right {
+    display: none;
+  }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+  div.box-right {
+    display: block;
+  }
+
+  div.margin-right {
+    margin-right: 0 !important;
+  }
+}
+
+// X-Large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+  div.box-right {
+    display: block;
+  }
+  div.margin-right {
+    margin-right: 195px;
+  }
+}
+
+// XX-Large devices (larger desktops, 1400px and up)
+@media (min-width: 1400px) {
+  div.box-right {
+    display: block;
+  }
+
+  div.margin-right {
+    margin-right: 195px;
+  }
+}

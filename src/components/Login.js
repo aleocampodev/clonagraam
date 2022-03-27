@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Form, FormGroup, Input, Button } from "reactstrap";
 import { useAuth } from "../hooks/UseAuth";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ const Login = () => {
     password: "",
   });
   const [error, setError] = useState("");
+  const [password, setPassword] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -18,19 +19,40 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
+
     try {
       await login(userLogin.email, userLogin.password);
+
       navigate("/feed");
-    } catch (err) {
-      setError(err.message);
+      e.target.reset();
+    } catch (error) {
+      console.log(error.code, "holi");
+      if (error.code === "auth/wrong-password") {
+        setPassword("Password invalid");
+      }
+      if (error.code === "auth/internal-error") {
+        setError("invalid email");
+      }
+
+      if (error.code === "auth/user-not-found") {
+        setError("user not found");
+      }
     }
-    e.target.reset();
   };
 
   return (
     <>
       <Form className="mt-3 " onSubmit={handleLogin}>
+        {password && (
+          <p className="text-danger position-absolute mt-5 text-lg-start bottom">
+            {password}
+          </p>
+        )}
+        {error && (
+          <p className="text-danger position-absolute mt-5 text-lg-start">
+            {error}
+          </p>
+        )}
         <FormGroup>
           <Input
             id="exampleEmail"

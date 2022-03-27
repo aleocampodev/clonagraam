@@ -11,7 +11,7 @@ import "../styles/_main.scss";
 
 const CardBox = () => {
   return (
-    <>
+    <div className="mt-lg-5 ms-lg-5 ">
       <Card className="margin-right">
         <h2 className="title-card mt-3">Clonagraam</h2>
 
@@ -35,7 +35,7 @@ const CardBox = () => {
         </section>
       </Card>
 
-      <Card className="margin-right mt-3 d-flex flex-row justify-content-center p-3">
+      <Card className="margin-right mt-3 d-flex flex-row justify-content-center p-3 ">
         <p className="pr-3">Don't have an account? </p>
         <Link to="/register" href="#" className="style-link">
           <p> Sign up</p>
@@ -49,7 +49,7 @@ const CardBox = () => {
           <img src={appStore} alt="image app store" className="width-30" />
         </div>
       </section>
-    </>
+    </div>
   );
 };
 

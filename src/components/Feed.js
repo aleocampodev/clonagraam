@@ -53,7 +53,7 @@ const Feed = () => {
           </Button>
         </div>
       </CardHeader>
-      <div className="mh-100 bg-first w-50 margin-left position: relative  overflow-y: scroll mt-3 d-flex">
+      <div className="mh-100 bg-first w-50 margin-left  mt-3 d-flex">
         <Posts />
         <div className="d-flex">
           <img

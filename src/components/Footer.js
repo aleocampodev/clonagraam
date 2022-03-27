@@ -21,12 +21,12 @@ function Footer() {
   ];
   return (
     <>
-      <div className="d-flex justify-content-center">
+      <div className="d-flex justify-content-center font-size-small">
         {words.map((word, index) => (
           <p key={index}>{word}</p>
         ))}
       </div>
-      <div className="d-flex justify-content-center">
+      <div className="d-flex justify-content-center font-size-small">
         <p>English</p>
         <p>© 2022 Clonaagraam "Clone of Instagram"</p>
       </div>
