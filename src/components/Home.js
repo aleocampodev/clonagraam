@@ -1,17 +1,17 @@
 import React from "react";
 import BoxRight from "./BoxRight";
-import Card from "./Card";
+import CardBox from "./CardBox";
 import { Container, Row, Col } from "reactstrap";
 
 const Home = () => {
   return (
-    <Container className="h-50">
-      <Row className="d-flex justify-content-center">
-        <Col lg="2">
+    <Container className="margin-auto">
+      <Row className="d-flex justify-content-center w-100 margin-auto">
+        <Col lg="2" className="w-50 d-flex justify-content-center">
           <BoxRight />
         </Col>
-        <Col lg="2">
-          <Card />
+        <Col lg="2" className="w-50 ">
+          <CardBox />
         </Col>
       </Row>
     </Container>
