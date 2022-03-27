@@ -1,59 +1,56 @@
 import React, { useContext, useState } from "react";
-import { auth, db } from "../Firebase";
-import { useForm } from "react-hook-form";
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-} from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import "../styles/_main.scss";
-import { collection, addDoc, getDocs } from "firebase/firestore";
 import { Card, Form, FormGroup, Input, Button } from "reactstrap";
 import { useAuth } from "../hooks/UseAuth";
 import { getApp } from "firebase/app";
 
 const Register = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [userName, setUserName] = useState("");
-  const { user } = useAuth();
-  const [error, setError] = useState("");
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  });
 
-  const onSubmit = async (email, password, FullName, UserName) => {
-    console.log("hola", email, password, fullName, userName);
+  const [error, setError] = useState("");
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
+
+  const handleChange = ({ target: { name, value } }) => {
+    setUser({ ...user, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      //const user = auth.currentUser;
-      //console.log(user, "hola user");
-      /*await addDoc(collection(db, "users"), {
-        uid: user.uid,
-        fullName,
-        userName,
-        email,
-      });*/
+      await signUp(user.email, user.password);
+      navigate("/feed");
     } catch (err) {
-      console.log(err.message);
+      setError(err.message);
+      if (error.code === "auth/internal-error") {
+        setError("correo invalido");
+      }
+      setError(error.message);
     }
   };
 
-  console.log(user);
   return (
     <div className="bg-first d-flex flex-column w-100  align-items-center vh-100 ">
+      {error && <p>{error}</p>}
       <Card className="w-25">
         <section>
           <h2 className="title-card mt-3">Clonagraam</h2>
           <p>Sign up to see photos and videos from your friends.</p>
         </section>
 
-        <Form className="h-50" onSubmit={onSubmit}>
+        <Form className="h-50" onSubmit={handleSubmit}>
           <FormGroup>
             <Input
               id="exampleEmail"
               name="email"
               placeholder="Email"
               type="email"
-              onChange={(ev) => setEmail(ev.target.value)}
+              onChange={handleChange}
             />
           </FormGroup>
           <FormGroup>
@@ -62,7 +59,7 @@ const Register = () => {
               name="password"
               placeholder="Password "
               type="password"
-              onChange={(ev) => setPassword(ev.target.value)}
+              onChange={handleChange}
             />
           </FormGroup>
 
