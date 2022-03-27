@@ -20,6 +20,7 @@ const Register = () => {
   console.log(imageDefault, "Hola osa");
 
   const [error, setError] = useState("");
+  const [password, setPassword] = useState("");
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
@@ -40,12 +41,14 @@ const Register = () => {
       );
       navigate("/feed");
     } catch (error) {
-      setError(error.message);
       if (error.code === "auth/internal-error") {
         setError("invalid email");
       }
       if (error.code === "auth/email-already-in-use") {
         setError("email exist");
+      }
+      if (error.code === "auth/weak-password") {
+        setPassword("Password should be at least 6 characters");
       }
     }
     e.target.reset();
@@ -53,6 +56,11 @@ const Register = () => {
 
   return (
     <div className="bg-first d-flex flex-column w-100  align-items-center vh-100 ">
+      {password && (
+        <p className="text-danger position-absolute mt-3 text-lg-start">
+          {password}
+        </p>
+      )}
       {error && (
         <p className="text-danger position-absolute mt-3 text-lg-start">
           {error}

@@ -5,7 +5,7 @@ import "./styles/_main.scss";
 
 function App() {
   return (
-    <div className="bg-first vh-100  d-flex flex-column justify-content-center">
+    <div className="bg-first vh-100  d-flex flex-column justify-content-center pt-3">
       <Home />
       <Footer />
     </div>

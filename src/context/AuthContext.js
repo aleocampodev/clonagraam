@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
 import { AuthContext } from "../hooks/UseAuth";
-import {
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-  uploadBytes,
-} from "firebase/storage";
-import { auth, db, storage, firebase, app } from "../Firebase";
+import { auth, db } from "../Firebase";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -17,15 +11,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 
-import {
-  setDoc,
-  addDoc,
-  collection,
-  getDoc,
-  doc,
-  query,
-  where,
-} from "firebase/firestore";
+import { setDoc, getDoc, doc } from "firebase/firestore";
 
 export const AuthProvider = ({ children }) => {
   const [userAuth, setUserAuth] = useState(null);
@@ -51,8 +37,8 @@ export const AuthProvider = ({ children }) => {
     sendEmailVerification(auth.currentUser);
   };
 
-  const login = (email, password) => {
-    signInWithEmailAndPassword(auth, email, password);
+  const login = async (email, password) => {
+    await signInWithEmailAndPassword(auth, email, password);
   };
 
   const loginWithFacebook = () => {

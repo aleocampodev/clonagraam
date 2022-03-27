@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   doc,
   serverTimestamp,
@@ -6,7 +6,13 @@ import {
   setDoc,
   collection,
 } from "firebase/firestore";
-import { ref, uploadBytes, image, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  image,
+  getDownloadURL,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import cameraIcon from "../assets/camera.png";
 import { db, storage } from "../Firebase";
@@ -14,6 +20,7 @@ import { db, storage } from "../Firebase";
 const EditPost = ({ toEditDescription, toEditImage, id }) => {
   const [editDescription, setEditDescription] = useState(toEditDescription);
   const [editImage, setEditImage] = useState(toEditImage);
+  const [url, setUrl] = useState("");
 
   console.log(editImage, "hola imagen");
   const [modal, setModal] = useState(false);
@@ -26,7 +33,19 @@ const EditPost = ({ toEditDescription, toEditImage, id }) => {
     console.log(file, "hello");*/
   };
 
-  const toggle = () => setModal(!modal);
+  const toggle = () => {
+    setModal(!modal);
+    setEditImage(toEditImage);
+    setEditDescription(toEditDescription);
+  };
+
+  useEffect(async () => {
+    const upload = await ref(storage, `images/${editImage.name}`);
+    const uploadImage = uploadBytesResumable(upload, editImage).then(() => {
+      getDownloadURL(upload).then((url) => setUrl(url));
+    });
+    console.log(editImage, "holi");
+  }, [editImage]);
 
   console.log(id, "hola id");
 
@@ -49,11 +68,7 @@ const EditPost = ({ toEditDescription, toEditImage, id }) => {
   };
   return (
     <>
-      <Button
-        onClick={toggle}
-        className="border-0 rounded-circle size-image ms-5"
-        color="none"
-      >
+      <Button onClick={toggle} className="border-0   w-100" color="none">
         Edit
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
@@ -74,7 +89,7 @@ const EditPost = ({ toEditDescription, toEditImage, id }) => {
             />
           </div>
           <div>
-            <img src={editImage} />
+            <img src={editImage.name ? url : editImage} className="w-100" />
           </div>
           <div>
             <input

@@ -1,10 +1,11 @@
 @import "./_variables";
+
 .margin-right {
   margin-right: 195px;
 }
 
 .padding-left {
-  padding-left: 215px;
+  padding-left: 210px;
 }
 
 .width-30 {
@@ -81,5 +82,39 @@ div.margin-bottom {
 .iconPosition {
   position: absolute;
   top: 15px;
-  right: 405px;
+  right: 470px;
+}
+
+.bottom {
+  bottom: 405px;
+  left: 155px;
+}
+
+div.position-image {
+  position: absolute;
+  left: 409px;
+  top: 59px;
+}
+
+.widthContainerCarousel {
+  width: 250px;
+}
+
+.font-size-small {
+  font-size: 12px;
+  font-weight: 400;
+  color: gray;
+}
+
+.width-small {
+  width: 190px;
+}
+
+.max-height-image {
+  max-height: 299px;
+}
+
+.scroll-cards {
+  height: 350px;
+  overflow-y: scroll;
 }
