@@ -44,8 +44,8 @@ function Posts() {
         posts.map((post) => {
           console.log(post.data.image, "hola");
           return (
-            <Card color="white" className="w-100" key={post.id}>
-              <CardHeader>
+            <Card color="white" className="w-100 mt-3" key={post.id}>
+              <CardHeader className="d-flex">
                 <img
                   src={userAuth.photoUrl}
                   alt="profile image"
