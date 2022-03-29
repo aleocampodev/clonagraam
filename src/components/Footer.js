@@ -20,7 +20,8 @@ function Footer() {
     "Visual Arts",
   ];
   return (
-    <>
+    <p>Hola</p>
+    /*<>
       <div className="d-flex justify-content-center font-size-small">
         {words.map((word, index) => (
           <p key={index}>{word}</p>
@@ -30,7 +31,7 @@ function Footer() {
         <p>English</p>
         <p>© 2022 Clonaagraam "Clone of Instagram"</p>
       </div>
-    </>
+    </>*/
   );
 }
 

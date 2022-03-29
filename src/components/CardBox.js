@@ -11,7 +11,7 @@ import "../styles/_main.scss";
 
 const CardBox = () => {
   return (
-    <div className="mt-lg-5 ms-lg-5 ">
+    /*<div className="mt-lg-5 ms-lg-5 ">
       <Card className="margin-right">
         <h2 className="title-card mt-3">Clonagraam</h2>
 
@@ -49,7 +49,8 @@ const CardBox = () => {
           <img src={appStore} alt="image app store" className="width-30" />
         </div>
       </section>
-    </div>
+    </div>*/
+    <div>Hola</div>
   );
 };
 

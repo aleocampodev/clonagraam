@@ -11,7 +11,13 @@ function BoxRight() {
   return (
     <div className="padding-left box-right">
       <img src={imageHome} />
-      <div
+    </div>
+  );
+}
+
+export default BoxRight;
+
+/* <div
         id="carouselExampleSlidesOnly"
         className="carousel slide widthContainerCarousel position-image"
         data-bs-ride="carousel"
@@ -30,9 +36,4 @@ function BoxRight() {
             <img src={image4} className="d-block w-100" alt="image4" />
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-export default BoxRight;
+      </div> */
